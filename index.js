@@ -97,5 +97,47 @@ function afficherListe_Apprenants() {
     })),
   );
 }
-
+function rechercherApprenant(id) {
+  for (let index = 0; index < apprenants.length; index++) {
+    if (apprenants[index].id === id) {
+      return i;
+    }
+  }
+}
+function rechercherApprenant(nom) {
+  for (let index = 0; index < apprenants.length; index++) {
+    if (apprenants[index].nomComplet === nom) {
+      return i;
+    }
+  }
+}
+function TrouverJour_apprenant(tab, jour) {
+  for (let index = 0; index < tab.length; index++) {
+    if (tab[i].jour === jour) {
+      return true;
+    }
+  }
+  return -1;
+}
+function enregistrerResultat(
+  apprenantID,
+  jour,
+  exercicesTermines,
+  totalExercices,
+  challengeTermine,
+) {
+  if (
+    jour > 7 ||
+    jour < 0 ||
+    totalExercices < 1 ||
+    exercicesTermines > totalExercices ||
+    exercicesTermines < 0 ||
+    apprenantIndex < 0 ||
+    apprenantIndex > apprenantIndex.length
+  ) {
+    return -1;
+  }
+  if (apprenants[rechercherApprenant(apprenantID)].resultats[jour]) {
+  }
+}
 afficherListe_Apprenants();
