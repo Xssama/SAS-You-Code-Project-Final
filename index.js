@@ -1,17 +1,24 @@
 const prompt = require("prompt-sync")();
-// const { resolve } = require("dns");
-// const { stdin } = require("process");
-// const ReadLine = require("readline");
-// const rl = ReadLine.createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-// });
-// function question(text) {
-//   return new Promise((resolve) => {
-//     rl.question(text, resolve);
-//   });
-// }
+function ValiderNombre(message) {
+  let Num;
+  Num = Number(prompt(message));
+  while (Number.isNaN(Num)) {
+    console.log("Votre Reponse est invalide, essayer à nouveau: ");
+    Num = Number(prompt(message));
+  }
+  return Num;
+}
 
+function ValiderNombre_Entre(message, Min, Max) {
+  let Num;
+  Num = Number(prompt(message));
+
+  while (Number.isNaN(Num) || Num > Max || Num < Min) {
+    console.log("Votre Reponse est invalide, essayer à nouveau: ");
+    Num = Number(prompt(message));
+  }
+  return Num;
+}
 const apprenants = [
   {
     id: 1,
@@ -97,30 +104,40 @@ function afficherListe_Apprenants() {
     })),
   );
 }
-function rechercherApprenant(id) {
+function rechercherApprenant_ParID(id) {
   for (let index = 0; index < apprenants.length; index++) {
     if (apprenants[index].id === id) {
-      return i;
+      return index;
     }
   }
+  return -1;
 }
-function rechercherApprenant(nom) {
-  for (let index = 0; index < apprenants.length; index++) {
-    if (apprenants[index].nomComplet === nom) {
-      return i;
-    }
-  }
-}
+// function rechercherApprenant(cherchePar) {
+//   if (typeof cherchePar == "string") {
+//     for (let index = 0; index < apprenants.length; index++) {
+//       if (apprenants[index].nomComplet.includes(cherchePar)) {
+//         return index;
+//       }
+//     }
+//   } else if (typeof cherchePar == "number") {
+//     for (let index = 0; index < apprenants.length; index++) {
+//       if (apprenants[index].id === cherchePar) {
+//         return index;
+//       }
+//     }
+//     return -1;
+//   }
+// }
 function TrouverJour_apprenant(tab, jour) {
   for (let index = 0; index < tab.length; index++) {
-    if (tab[i].jour === jour) {
-      return true;
+    if (tab[index].jour === jour) {
+      return index;
     }
   }
   return -1;
 }
 function enregistrerResultat(
-  apprenantID,
+  apprenantIndex,
   jour,
   exercicesTermines,
   totalExercices,
@@ -133,11 +150,79 @@ function enregistrerResultat(
     exercicesTermines > totalExercices ||
     exercicesTermines < 0 ||
     apprenantIndex < 0 ||
-    apprenantIndex > apprenantIndex.length
+    apprenantIndex > apprenants.length
   ) {
-    return -1;
+    return false;
   }
-  if (apprenants[rechercherApprenant(apprenantID)].resultats[jour]) {
+  let Jourindex = TrouverJour_apprenant(
+    apprenants[apprenantIndex].resultats,
+    jour,
+  );
+  if (Jourindex != -1) {
+    apprenants[apprenantIndex].resultats[Jourindex].exercicesTermines =
+      exercicesTermines;
+    apprenants[apprenantIndex].resultats[Jourindex].totalExercices =
+      totalExercices;
+    apprenants[apprenantIndex].resultats[Jourindex].challengeTermine =
+      challengeTermine;
+    return true;
+  } else {
+    let nouveauResultats = {
+      jour: jour,
+      exercicesTermines: exercicesTermines,
+      totalExercices: totalExercices,
+      challengeTermine: challengeTermine,
+    };
+    apprenants[apprenantIndex].resultats.push(nouveauResultats);
+    return true;
+  }
+  return false;
+}
+
+function AjouterJourResultats(index, jour) {
+  console.log();
+}
+function Afficher_enregistrerResultat() {
+  let apprenantID = ValiderNombre("Entrer l'identifiant d'apprenant: ");
+  let apprenantIndex = rechercherApprenant_ParID(apprenantID);
+
+  if (apprenantIndex != -1) {
+    let apprenant = apprenants[apprenantIndex];
+    console.log("Apprenant trouvé: ", apprenant.nomComplet);
+    let jour = ValiderNombre_Entre("Jour (1 à 7): ", 1, 7);
+    let totalExercices = ValiderNombre("Total d'exercices proposés: ");
+    let exercicesTermines = ValiderNombre_Entre(
+      "Exercices terminés : ",
+      0,
+      totalExercices,
+    );
+    let challengeTermine =
+      prompt("Challenge terminé (oui/non): ").toLowerCase() == "oui"
+        ? true
+        : false;
+    if (
+      enregistrerResultat(
+        apprenantIndex,
+        jour,
+        exercicesTermines,
+        totalExercices,
+        challengeTermine,
+      )
+    ) {
+      console.log("Résultat du jour", jour, " enregistré.");
+    } else {
+      console.log(
+        "Échec de l'enregistrement des résultats du jour",
+        jour,
+        "!.",
+      );
+    }
+  } else {
+    console.log("Il n'existe aucune personne avec cet identifiant !");
   }
 }
+
+//afficherListe_Apprenants();
+//console.log(rechercherApprenant(2));
+console.log(Afficher_enregistrerResultat());
 afficherListe_Apprenants();
