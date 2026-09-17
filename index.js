@@ -1,4 +1,7 @@
 const prompt = require("prompt-sync")();
+function attendreTouche() {
+  prompt("\nAppuyez sur Entrée pour revenir au menu...");
+}
 function ValiderNombre(message) {
   let Num;
   Num = Number(prompt(message));
@@ -78,22 +81,18 @@ function calculerProgression(apprenantID) {
         : 0;
     }
     let progression = (exercicesTerminesCount / totalExercicesCount) * 100;
-    console.log(
-      apprenants[apprenantIndex].nomComplet,
-      " :",
-      exercicesTerminesCount,
-      "/",
-      totalExercicesCount,
-      "exercices, progression ",
-      progression,
-      " %.\n",
-      Journees_renseignees,
-      "journées renseignées, ",
-      challengeTermineCount,
-      "challenges terminés.",
-    );
+    const obj = {
+      apprenantID: apprenantID,
+      exercicesTerminesCount: exercicesTerminesCount,
+      totalExercicesCount: totalExercicesCount,
+      challengeTermineCount: challengeTermineCount,
+      Journees_renseignees: Journees_renseignees,
+      progression: progression,
+    };
+    return obj;
   } else {
     console.log("L'apprenant n'existe pas!");
+    return -1;
   }
 }
 function ajouterApprenant(nomComplet, ville) {
@@ -110,6 +109,7 @@ function ajouterApprenant(nomComplet, ville) {
 }
 
 function Afficher_AjouterApprenant() {
+  console.clear();
   console.log("==============================================");
   console.log("         Entrer les infos suivante:          ");
   console.log("==============================================");
@@ -124,6 +124,7 @@ function Afficher_AjouterApprenant() {
   } else {
     console.log("Echec d'ajouter l'apprenant, nom/ville inexact!");
   }
+  attendreTouche();
 }
 
 function afficherListe_Apprenants() {
@@ -293,6 +294,13 @@ function AjouterJourResultats(index, jour) {
   console.log();
 }
 function Afficher_enregistrerResultat() {
+  console.log(
+    "------------------------------------------------------------------",
+  );
+  console.log("\t\t\tEnregistrer les résultats d'un apprenant.");
+  console.log(
+    "------------------------------------------------------------------",
+  );
   let apprenantID = ValiderNombre("Entrer l'identifiant d'apprenant: ");
   let apprenantIndex = rechercherApprenant_ParID(apprenantID);
 
@@ -332,17 +340,155 @@ function Afficher_enregistrerResultat() {
     console.log("Il n'existe aucune personne avec cet identifiant !");
   }
 }
+function trierParProgression() {
+  let arr = [];
+  for (let index = 0; index < apprenants.length; index++) {
+    let apprenant = apprenants[index];
+    const obj = {
+      ID: apprenant.id,
+      nomComplet: apprenant.nomComplet,
+      ville: apprenant.ville,
+      progression: calculerProgression(apprenant.id).progression,
+    };
+    arr.push(obj);
+  }
+  return arr.length == 0
+    ? null
+    : arr.sort((a, b) => b.progression - a.progression);
+}
+function filtrerParNiveau(niveau) {
+  let arr = [];
 
+  for (let index = 0; index < apprenants.length; index++) {
+    if (niveau === 1) {
+      let progression = calculerProgression(apprenants[index].id).progression;
+      if (progression >= 80) {
+        arr.push({
+          ID: apprenants[index].id,
+          nom: apprenants[index].nomComplet,
+          ville: apprenants[index].ville,
+          progression: progression,
+        });
+      }
+    } else if (niveau === 2) {
+      let progression = calculerProgression(apprenants[index].id).progression;
+      if (progression >= 50 && progression < 80) {
+        arr.push({
+          ID: apprenants[index].id,
+          nom: apprenants[index].nomComplet,
+          ville: apprenants[index].ville,
+          progression: progression,
+        });
+      } else if (niveau === 3) {
+        let progression = calculerProgression(apprenants[index].id).progression;
+        if (progression < 50) {
+          arr.push({
+            ID: apprenants[index].id,
+            nom: apprenants[index].nomComplet,
+            ville: apprenants[index].ville,
+            progression: progression,
+          });
+        }
+      }
+    }
+  }
+  return arr.length === 0 ? null : arr;
+}
+function afficher_filtrerParNiveau() {
+  console.log(
+    "------------------------------------------------------------------",
+  );
+  console.log("\t\t\tFiltrer Par Niveau:");
+  console.log(
+    "------------------------------------------------------------------",
+  );
+  const LesNiveaux = { 1: "solide", 2: "En progression", 3: "À renforcer" };
+  let choix = ValiderNombre_Entre(
+    "Choisissez un niveau : Solide [1] | En progression [2] | À renforcer [3] ? Votre choix : ",
+    1,
+    3,
+  );
+  let arr = filtrerParNiveau(choix);
+  console.log("Niveau:", LesNiveaux[choix]);
+  console.log("Nombre d'apprenants:", arr.length);
+  console.log(
+    "------------------------------------------------------------------",
+  );
+  for (let index = 0; index < arr.length; index++) {
+    console.log("\t\tL'apprenant Avec Identifiant: {", arr[index].ID, "}");
+    console.log("Nom complet: ", arr[index].nom);
+    console.log("Ville: ", arr[index].ville);
+    console.log("Progression: ", arr[index].progression);
+    console.log(
+      "------------------------------------------------------------------",
+    );
+  }
+}
+function HandleUserchoice(choice) {
+  switch (choice) {
+    case 1:
+      //tableau de board
+      break;
+    case 2:
+      afficherListe_Apprenants();
+      break;
+    case 3:
+      Afficher_AjouterApprenant();
+      break;
+    case 4:
+      rechercherApprenant();
+      break;
+    case 5:
+      Afficher_enregistrerResultat();
+      break;
+    case 6:
+      break;
+    case 7:
+      afficher_filtrerParNiveau();
+      break;
+    case 8:
+      trierParProgression();
+      break;
+    case 9:
+      //Tri par ordre alphabétique
+      break;
+    default:
+      break;
+  }
+}
+function Start() {
+  let choix = 0;
+  do {
+    console.clear();
+    console.log("SAS PROGRESS CONSOLE");
+    console.log("1.	Afficher le tableau de bord");
+    console.log("2.	Afficher la liste des apprenants");
+    console.log("3.	Ajouter un apprenant");
+    console.log("4.	Consulter un apprenant par identifiant");
+    console.log("5.	Ajouter ou modifier le résultat d'une journée");
+    console.log("6.	Rechercher un apprenant par nom");
+    console.log("7.	Filtrer les apprenants par niveau");
+    console.log("8.	Trier les apprenants par progression décroissante");
+    console.log("9.	Trier les apprenants par ordre alphabétique");
+    console.log("0.	Quitter");
+    choix = ValiderNombre_Entre("Votre Choix: ", 0, 9);
+    HandleUserchoice(choix);
+  } while (choix != 0);
+}
 //afficherListe_Apprenants();
 //console.log(rechercherApprenant(2));
 // console.log(Afficher_enregistrerResultat());
 // afficherListe_Apprenants();
 //calculerProgression(2);
 //Afficher_enregistrerResultat();
-//Afficher_AjouterApprenant();
+// Afficher_AjouterApprenant();
+// Afficher_enregistrerResultat();
 //afficherListe_Apprenants();
 //console.log(apprenants);
 //console.log(rechercherApprenant_ParNom("oussama"));
-rechercherApprenant();
+//rechercherApprenant();
 //rechercherApprenant();
 //rechercherApprenant_ParNom("sara");
+//console.table(trierParProgression());
+//afficherListe_Apprenants();
+Start();
