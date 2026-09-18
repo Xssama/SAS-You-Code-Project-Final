@@ -330,10 +330,6 @@ function enregistrerResultat(
     return true;
   }
 }
-
-function AjouterJourResultats(index, jour) {
-  console.log();
-}
 function Afficher_enregistrerResultat() {
   console.log(
     "------------------------------------------------------------------",
