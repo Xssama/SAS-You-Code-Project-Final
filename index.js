@@ -207,15 +207,17 @@ function ConsulterApprenant(apprenantindex) {
     console.log("Resultats:");
     if (apprenants[apprenantindex].resultats.length > 0) {
       console.table(
-        apprenants[apprenantindex].resultats.map((resultats) => ({
-          Jour: resultats.jour,
-          "Exercices Termines": resultats.exercicesTermines,
-          "Exercices Proposees": resultats.totalExercices,
-          Progression:
-            (resultats.exercicesTermines / resultats.totalExercices) * 100 +
-            "%",
-          Challenge: resultats.challengeTermine ? "Oui" : "Non",
-        })),
+        apprenants[apprenantindex].resultats
+          .map((resultats) => ({
+            Jour: resultats.jour,
+            "Exercices Termines": resultats.exercicesTermines,
+            "Exercices Proposees": resultats.totalExercices,
+            Progression:
+              (resultats.exercicesTermines / resultats.totalExercices) * 100 +
+              "%",
+            Challenge: resultats.challengeTermine ? "Oui" : "Non",
+          }))
+          .sort((a, b) => a.Jour - b.Jour),
       );
     } else {
       console.log("(Aucun enregistrement trouvé pour le moment.)");
@@ -397,6 +399,35 @@ function Afficher_trierParProgression() {
     console.log("\n");
   }
 }
+function trierParAlphabetique() {
+  let arr = [];
+  for (let index = 0; index < apprenants.length; index++) {
+    let apprenant = apprenants[index];
+    const obj = {
+      ID: apprenant.id,
+      nomComplet: apprenant.nomComplet,
+      ville: apprenant.ville,
+      progression: calculerProgression(apprenant.id).progression,
+    };
+    arr.push(obj);
+  }
+  return arr.length == 0
+    ? null
+    : arr.sort((a, b) => a.nomComplet.localeCompare(b.nomComplet));
+}
+function Afficher_trierParAlphabetique() {
+  console.log("==============================================");
+  console.log("       APPRENANTS — ORDRE ALPHABÉTIQUE");
+  console.log("==============================================");
+  let arr = trierParAlphabetique();
+  for (let index = 0; index < arr.length; index++) {
+    console.log(index + 1, ". ID :", arr[index].ID);
+    console.log("    Nom Complet :", arr[index].nomComplet);
+    console.log("    Ville :", arr[index].ville);
+    console.log("    Progression :", arr[index].progression);
+    console.log("\n");
+  }
+}
 function filtrerParNiveau(niveau) {
   let arr = [];
 
@@ -573,7 +604,7 @@ function HandleUserchoice(choice) {
       break;
     case 9:
       console.clear();
-      //Tri par ordre alphabétique
+      Afficher_trierParAlphabetique();
       attendreTouche();
       break;
     default:
