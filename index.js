@@ -98,9 +98,6 @@ function calculerProgression(apprenantID) {
   let apprenantIndex = rechercherApprenant_ParID(apprenantID);
   if (apprenantIndex != -1) {
     let Journees_renseignees = apprenants[apprenantIndex].resultats.length;
-    if (Journees_renseignees === 0) {
-      return 0;
-    }
     let exercicesTerminesCount = 0;
     let totalExercicesCount = 0;
     let challengeTermineCount = 0;
@@ -114,7 +111,10 @@ function calculerProgression(apprenantID) {
         ? 1
         : 0;
     }
-    let progression = (exercicesTerminesCount / totalExercicesCount) * 100;
+    let progression =
+      totalExercicesCount === 0
+        ? 0
+        : (exercicesTerminesCount / totalExercicesCount) * 100;
     const obj = {
       apprenantID: apprenantID,
       exercicesTerminesCount: exercicesTerminesCount,
@@ -298,7 +298,7 @@ function enregistrerResultat(
 ) {
   if (
     jour > 7 ||
-    jour < 0 ||
+    jour < 1 ||
     totalExercices < 1 ||
     exercicesTermines > totalExercices ||
     exercicesTermines < 0 ||
@@ -474,7 +474,7 @@ function filtrerParNiveau(niveau) {
       }
     }
   }
-  return arr.length === 0 ? null : arr;
+  return arr.length === 0 ? [] : arr;
 }
 function afficher_filtrerParNiveau() {
   console.log(
@@ -516,7 +516,7 @@ function DonneesManquants_Apprenants(apprenantID) {
   for (let Jour = 1; Jour <= 7; Jour++) {
     let JourIndex = TrouverJour_apprenant(apprenant.resultats, Jour);
     if (JourIndex == -1) {
-      DonnesManqauntsTab.challengsemanquantsCount.push(Jour);
+      //DonnesManqauntsTab.challengsemanquantsCount.push(Jour);
       DonnesManqauntsTab.JoursmanquantsCount.push(Jour);
     } else {
       if (!apprenant.resultats[JourIndex].challengeTermine) {
@@ -640,5 +640,4 @@ function Start() {
   console.log("A Bientot :).");
 }
 
-//Start();
-calculerProgression(4);
+Start();
