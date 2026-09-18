@@ -98,6 +98,9 @@ function calculerProgression(apprenantID) {
   let apprenantIndex = rechercherApprenant_ParID(apprenantID);
   if (apprenantIndex != -1) {
     let Journees_renseignees = apprenants[apprenantIndex].resultats.length;
+    if (Journees_renseignees === 0) {
+      return 0;
+    }
     let exercicesTerminesCount = 0;
     let totalExercicesCount = 0;
     let challengeTermineCount = 0;
@@ -535,7 +538,11 @@ function afficherTableauDeBord() {
   });
   progression = progression / nb_apprenants;
   console.log("\n\nApprenants: ", nb_apprenants);
-  console.log("Progression moyenne: ", progression, "%");
+  console.log(
+    "Progression moyenne: ",
+    Number.isNaN(progression) ? 0 : progression,
+    "%",
+  );
   console.log("\nNiveaux: ");
   console.log("Solide: ", filtrerParNiveau(1)?.length);
   console.log("En progression: ", filtrerParNiveau(2)?.length);
@@ -548,7 +555,7 @@ function afficherTableauDeBord() {
       ".",
       arr[index].nomComplet,
       ": ",
-      arr[index].progression,
+      Number.isNaN(arr[index].progression) ? 0 : arr[index].progression,
       "%",
     );
   }
@@ -633,4 +640,5 @@ function Start() {
   console.log("A Bientot :).");
 }
 
-Start();
+//Start();
+calculerProgression(4);
