@@ -40,10 +40,41 @@ const apprenants = [
         totalExercices: 20,
         challengeTermine: false,
       },
+      {
+        jour: 5,
+        exercicesTermines: 17,
+        totalExercices: 20,
+        challengeTermine: true,
+      },
     ],
   },
   {
     id: 2,
+    nomComplet: "Ismail Nadori",
+    ville: "Nador",
+    resultats: [
+      {
+        jour: 1,
+        exercicesTermines: 2,
+        totalExercices: 20,
+        challengeTermine: false,
+      },
+      {
+        jour: 4,
+        exercicesTermines: 8,
+        totalExercices: 20,
+        challengeTermine: true,
+      },
+      {
+        jour: 7,
+        exercicesTermines: 1,
+        totalExercices: 20,
+        challengeTermine: false,
+      },
+    ],
+  },
+  {
+    id: 3,
     nomComplet: "Yassine Code",
     ville: "Oujda",
     resultats: [
@@ -57,7 +88,7 @@ const apprenants = [
   },
 ];
 
-let id = 3;
+let id = 4;
 
 function normaliserNom(nom) {
   return nom?.replace(/[^a-zA-Z0-9 ]/g, "").trim();
@@ -109,7 +140,6 @@ function ajouterApprenant(nomComplet, ville) {
 }
 
 function Afficher_AjouterApprenant() {
-  console.clear();
   console.log("==============================================");
   console.log("         Entrer les infos suivante:          ");
   console.log("==============================================");
@@ -124,7 +154,6 @@ function Afficher_AjouterApprenant() {
   } else {
     console.log("Echec d'ajouter l'apprenant, nom/ville inexact!");
   }
-  attendreTouche();
 }
 
 function afficherListe_Apprenants() {
@@ -379,16 +408,16 @@ function filtrerParNiveau(niveau) {
           ville: apprenants[index].ville,
           progression: progression,
         });
-      } else if (niveau === 3) {
-        let progression = calculerProgression(apprenants[index].id).progression;
-        if (progression < 50) {
-          arr.push({
-            ID: apprenants[index].id,
-            nom: apprenants[index].nomComplet,
-            ville: apprenants[index].ville,
-            progression: progression,
-          });
-        }
+      }
+    } else if (niveau === 3) {
+      let progression = calculerProgression(apprenants[index].id).progression;
+      if (progression < 50) {
+        arr.push({
+          ID: apprenants[index].id,
+          nom: apprenants[index].nomComplet,
+          ville: apprenants[index].ville,
+          progression: progression,
+        });
       }
     }
   }
@@ -424,33 +453,116 @@ function afficher_filtrerParNiveau() {
     );
   }
 }
+function DonneesManquants_Apprenants(apprenantID) {
+  let apprenant = apprenants[rechercherApprenant_ParID(apprenantID)];
+  const DonnesManqauntsTab = {
+    challengsemanquantsCount: [],
+    JoursmanquantsCount: [],
+  };
+
+  for (let Jour = 1; Jour <= 7; Jour++) {
+    let JourIndex = TrouverJour_apprenant(apprenant.resultats, Jour);
+    if (JourIndex == -1) {
+      DonnesManqauntsTab.challengsemanquantsCount.push(Jour);
+      DonnesManqauntsTab.JoursmanquantsCount.push(Jour);
+    } else {
+      if (!apprenant.resultats[JourIndex].challengeTermine) {
+        DonnesManqauntsTab.challengsemanquantsCount.push(Jour);
+      }
+    }
+  }
+  return DonnesManqauntsTab;
+}
+function afficherTableauDeBord() {
+  let arr = trierParProgression();
+  console.log("================================");
+  console.log("        Tableau De Bord");
+  console.log("================================");
+  let nb_apprenants = apprenants.length;
+  let progression = 0;
+  arr.forEach((element) => {
+    progression += element.progression;
+  });
+  progression = progression / nb_apprenants;
+  console.log("\n\nApprenants: ", nb_apprenants);
+  console.log("Progression moyenne: ", progression, "%");
+  console.log("\nNiveaux: ");
+  console.log("Solide: ", filtrerParNiveau(1)?.length);
+  console.log("En progression: ", filtrerParNiveau(2)?.length);
+  console.log("A renforcer: ", filtrerParNiveau(3)?.length);
+
+  console.log("\n\n-------------- Progression -------------");
+  for (let index = 0; index < arr.length; index++) {
+    console.log(
+      index + 1,
+      ".",
+      arr[index].nomComplet,
+      ": ",
+      arr[index].progression,
+      "%",
+    );
+  }
+  console.log("\n\n----------- Donnees manquants ------------");
+  arr.forEach((element) => {
+    const DonneesManqaunts = DonneesManquants_Apprenants(element.ID);
+    console.log(element.nomComplet, ": ");
+    console.log(
+      "\tJours Manquants     : ",
+      DonneesManqaunts.JoursmanquantsCount.join(", "),
+    );
+    console.log(
+      "\tChallenges Manquants: ",
+      DonneesManqaunts.challengsemanquantsCount.join(", "),
+    );
+    console.log("\n");
+  });
+}
 function HandleUserchoice(choice) {
   switch (choice) {
     case 1:
-      //tableau de board
+      console.clear();
+      afficherTableauDeBord();
+      attendreTouche();
       break;
     case 2:
+      console.clear();
       afficherListe_Apprenants();
+      attendreTouche();
       break;
     case 3:
+      console.clear();
       Afficher_AjouterApprenant();
+      attendreTouche();
       break;
     case 4:
+      console.clear();
       rechercherApprenant();
+      attendreTouche();
       break;
     case 5:
+      console.clear();
       Afficher_enregistrerResultat();
+      attendreTouche();
       break;
     case 6:
+      console.clear();
+
+      attendreTouche();
       break;
     case 7:
+      console.clear();
       afficher_filtrerParNiveau();
+      attendreTouche();
       break;
     case 8:
+      console.clear();
       trierParProgression();
+      attendreTouche();
       break;
     case 9:
+      console.clear();
       //Tri par ordre alphabétique
+      attendreTouche();
       break;
     default:
       break;
@@ -491,4 +603,6 @@ function Start() {
 //rechercherApprenant_ParNom("sara");
 //console.table(trierParProgression());
 //afficherListe_Apprenants();
-Start();
+//Start();
+trierParProgression();
+//afficherTableauDeBord();
