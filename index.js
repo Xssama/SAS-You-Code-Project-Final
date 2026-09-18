@@ -385,6 +385,18 @@ function trierParProgression() {
     ? null
     : arr.sort((a, b) => b.progression - a.progression);
 }
+function Afficher_trierParProgression() {
+  console.log("==============================================");
+  console.log("     APPRENANTS — PROGRESSION DÉCROISSANTE");
+  console.log("==============================================");
+  let arr = trierParProgression();
+  for (let index = 0; index < arr.length; index++) {
+    console.log(index + 1, ". ID :", arr[index].ID);
+    console.log("    Nom Complet :", arr[index].nomComplet);
+    console.log("    Progression :", arr[index].progression);
+    console.log("\n");
+  }
+}
 function filtrerParNiveau(niveau) {
   let arr = [];
 
@@ -556,7 +568,7 @@ function HandleUserchoice(choice) {
       break;
     case 8:
       console.clear();
-      trierParProgression();
+      Afficher_trierParProgression();
       attendreTouche();
       break;
     case 9:
@@ -603,6 +615,6 @@ function Start() {
 //rechercherApprenant_ParNom("sara");
 //console.table(trierParProgression());
 //afficherListe_Apprenants();
-//Start();
-trierParProgression();
+Start();
+//trierParProgression();
 //afficherTableauDeBord();
