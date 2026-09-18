@@ -157,21 +157,28 @@ function Afficher_AjouterApprenant() {
 }
 
 function afficherListe_Apprenants() {
-  console.log("\t\t\tNombre d'apprenants(", apprenants.length, ")");
-  console.table(
-    apprenants.map((apprenant) => ({
-      ID: apprenant.id,
-      "Nom Complet": apprenant.nomComplet,
-      ville: apprenant.ville,
-      Progression: apprenant.resultats
-        .map((jour) => {
-          const prog = (jour.exercicesTermines / jour.totalExercices) * 100;
-          const Challenge = jour.challengeTermine ? "Yes" : "No";
-          return `J[${jour.jour}]: ${prog}%, ${Challenge} `;
-        })
-        .join(" | "),
-    })),
+  console.log(
+    "===================================================================================================================",
   );
+  console.log("\t\t\t\t      LISTE DES APPRENANTS");
+  console.log(
+    "===================================================================================================================",
+  );
+
+  let arr = apprenants.map((apprenant) => ({
+    ID: apprenant.id,
+    "Nom Complet": apprenant.nomComplet,
+    ville: apprenant.ville,
+    Progression: apprenant.resultats
+      .map((jour) => {
+        const prog = (jour.exercicesTermines / jour.totalExercices) * 100;
+        const Challenge = jour.challengeTermine ? "Yes" : "No";
+        return `J[${jour.jour}]: ${prog}%, ${Challenge} `;
+      })
+      .join(" | "),
+  }));
+  console.table(arr);
+  console.log("\t\tNombre Total: ", arr.length);
 }
 function rechercherApprenant_ParID(id) {
   for (let index = 0; index < apprenants.length; index++) {
