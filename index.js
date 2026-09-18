@@ -596,20 +596,15 @@ function HandleUserchoice(choice) {
       break;
     case 6:
       console.clear();
-
+      afficher_filtrerParNiveau();
       attendreTouche();
       break;
     case 7:
       console.clear();
-      afficher_filtrerParNiveau();
-      attendreTouche();
-      break;
-    case 8:
-      console.clear();
       Afficher_trierParProgression();
       attendreTouche();
       break;
-    case 9:
+    case 8:
       console.clear();
       Afficher_trierParAlphabetique();
       attendreTouche();
@@ -626,33 +621,16 @@ function Start() {
     console.log("1.	Afficher le tableau de bord");
     console.log("2.	Afficher la liste des apprenants");
     console.log("3.	Ajouter un apprenant");
-    console.log("4.	Consulter un apprenant par identifiant");
+    console.log("4.	Rechercher un apprenant par nom/identifiant");
     console.log("5.	Ajouter ou modifier le résultat d'une journée");
-    console.log("6.	Rechercher un apprenant par nom");
-    console.log("7.	Filtrer les apprenants par niveau");
-    console.log("8.	Trier les apprenants par progression décroissante");
-    console.log("9.	Trier les apprenants par ordre alphabétique");
+    console.log("6.	Filtrer les apprenants par niveau");
+    console.log("7.	Trier les apprenants par progression décroissante");
+    console.log("8.	Trier les apprenants par ordre alphabétique");
     console.log("0.	Quitter");
-    choix = ValiderNombre_Entre("Votre Choix: ", 0, 9);
+    choix = ValiderNombre_Entre("Votre Choix: ", 0, 8);
     HandleUserchoice(choix);
   } while (choix != 0);
+  console.log("A Bientot :).");
 }
-//afficherListe_Apprenants();
-//console.log(rechercherApprenant(2));
-// console.log(Afficher_enregistrerResultat());
-// afficherListe_Apprenants();
-//calculerProgression(2);
-//Afficher_enregistrerResultat();
-// Afficher_AjouterApprenant();
-// Afficher_enregistrerResultat();
-//afficherListe_Apprenants();
-//console.log(apprenants);
-//console.log(rechercherApprenant_ParNom("oussama"));
-//rechercherApprenant();
-//rechercherApprenant();
-//rechercherApprenant_ParNom("sara");
-//console.table(trierParProgression());
-//afficherListe_Apprenants();
+
 Start();
-//trierParProgression();
-//afficherTableauDeBord();
